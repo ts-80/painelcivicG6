@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Digital Civic G6</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .dashboard {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .car-image {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 80%;
+      height: auto;
+      z-index: 1;
+    }
+    .gauge {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #00ffff;
+      text-align: center;
+      line-height: 200px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .speedometer {
+      left: 10%;
+      top: 60%;
+    }
+    .rpm {
+      right: 10%;
+      top: 60%;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    
+    <div style="position: relative; width: 1200px; height: 420px;"> 
+        <img src="https://copilot.microsoft.com/th/id/BCO.e8089c45-063b-4172-b4da-f83c76d2945e.png" alt="Fundo digital" style="width: 100%; height: 100%;"> 
+        <img src="https://copilot.microsoft.com/th/id/BCO.a73123e3-b846-42d1-9b46-3f33c774ae06.png" alt="Civic G6" class="car-image">
+        <!-- <img src="https://copilot.microsoft.com/th/id/BCO.4b2aa1b4-86ac-4017-b3e3-c719418fcb44.png" alt="Civic G6" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"> -->
+     </div>
+    <!-- <div class="gauge speedometer">120 km/h</div>
+    <div class="gauge rpm">3500 RPM</div> -->
+  </div>
+</body>
+</html>
