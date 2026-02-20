@@ -21,7 +21,7 @@ body{
   background:radial-gradient(circle at center,#111 0%,#000 70%);
   border-radius:40px;
   position:relative;
-  box-shadow:0 0 80px rgba(255,0,0,0.15);
+  box-shadow:0 0 80px rgba(255, 0, 0, 0.336);
   overflow:hidden;
 }
 
@@ -62,6 +62,14 @@ canvas{
     left: 35px;
     color: #ffff;
 }
+
+#temperatura{
+    position: absolute;
+    top: 345px;
+    left: 1132px;
+    color: #ffff;
+}
+
 .speed{
   position:absolute;
   right:270px;
@@ -155,7 +163,7 @@ canvas{
 
     <div class="gear" id="gear">D</div>
     <label id="fuell" for="fuel">FUELL</label>
-    
+    <label id="temperatura" for="temp">TEMP</label>
     <div class="rpm">
         <span id="rpmValue">0</span> rpm
     </div>
