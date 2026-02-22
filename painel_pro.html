@@ -1,284 +1,430 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Painel Honda Organizado</title>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Painel Honda Organizado</title>
 
-<style>
-body{
-  margin:0;
-  background:#000;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-family:Segoe UI, sans-serif;
-}
+    <style>
+      body {
+        margin: 0;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: "Cinzel", "Roboto", serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        font-style: normal;
+      }
 
-.cluster{
-  width:1200px;
-  height:420px;
-  background:radial-gradient(circle at center,#111 0%,#000 70%);
-  border-radius:40px;
-  position:relative;
-  box-shadow:0 0 80px rgba(255, 0, 0, 0.336);
-  overflow:hidden;
-}
+      .cluster {
+        width: 1200px;
+        height: 420px;
+        /* background: radial-gradient(circle at center, #111 0%, #000 70%); */
+        border-radius: 40px;
+        position: relative;
+        box-shadow: 0 0 80px rgba(255, 0, 0, 0.336);
+        overflow: hidden;
+      }
 
-canvas{
-  position:absolute;
-  top:0;
-  left:0;
-  justify-content: space-between;
-  z-index: 1;
-}
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        justify-content: space-between;
+        z-index: 1;
+      }
 
-.logo{
-  position:absolute;
-  top:20px;
-  width:100%;
-  text-align:center;
-  color:white;
-  font-size:34px;
-  letter-spacing:3px;
-  text-shadow:0 0 15px red;
-  z-index: 1;
-}
+      #logoImg {
+        position: absolute;
+        top: 20px;
+        left: 541px;
+        width: 90px;
+        z-index: 2;
+      }
 
-#containe{
-    display: flex;
-    gap: 5px;
-}
+      .logo {
+        position: absolute;
+        top: 85px;
+        left: 45px;
+        width: 90%;
+        text-align: center;
+        color: white;
 
-#car{
-    position: relative;
-    left: 185px;
-    top: -72px;
-    z-index: 0;
-}
-#fuell{
-    position: absolute;
-    top: 345px;
-    left: 35px;
-    color: #ffff;
-}
+        font-size: 34px;
+        letter-spacing: 3px;
+        text-shadow: 0 0 15px red;
+        z-index: 1;
+      }
 
-#temperatura{
-    position: absolute;
-    top: 345px;
-    left: 1132px;
-    color: #ffff;
-}
+      #containe {
+        display: flex;
+        gap: 5px;
+      }
 
-.speed{
-  position:absolute;
-  right:270px;
-  top:160px;
-  color:white;
-  font-size:80px;
-  text-shadow:0 0 20px red;
-}
+      #fundoazul {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
 
-.speed small{
-  font-size:28px;
-}
+      #car {
+        position: relative;
+        width: 635px;
+        left: 289px;
+        top: 41px;
+        z-index: 0;
+      }
+      #fuell {
+        position: absolute;
+        top: 345px;
+        left: 30px;
+        color: #ffff;
+      }
 
-.rpm{
-  position:absolute;
-  left:270px;
-  top:170px;
-  color:white;
-  font-size:45px;
-  text-shadow:0 0 15px red;
-}
+      #temperatura {
+        position: absolute;
+        top: 345px;
+        left: 1132px;
 
-.gear{
-  position:absolute;
-  top:150px;
-  width:100%;
-  text-align:center;
-  font-size:70px;
-  color:white;
-  text-shadow:0 0 20px red;
-}
+        color: #ffff;
+      }
 
-.indicators{
-  position:absolute;
-  bottom:20px;
-  width:100%;
-  text-align:center;
-  font-size:18px;
-  color:#aaa;
-}
+      .speed {
+        position: absolute;
+        right: 270px;
+        top: 160px;
+        color: white;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 80px;
+        text-shadow: 0 0 20px red;
+      }
 
-.side-bar{
-  position:absolute;
-  bottom:80px;
-  width:20px;
-  height:160px;
-  background:#222;
-  border-radius:10px;
-}
+      .speed small {
+        font-size: 28px;
+      }
 
-#fuelBar{
-  left:40px;
-}
+      .rpm {
+        position: absolute;
+        left: 270px;
+        top: 170px;
+        color: white;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 45px;
+        text-shadow: 0 0 15px red;
+      }
 
-#tempBar{
-  right:40px;
-}
+      .gear {
+        position: absolute;
+        top: 150px;
+        width: 100%;
+        text-align: center;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 70px;
+        color: white;
+        text-shadow: 0 0 20px red;
+      }
 
-.level{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  border-radius:10px;
-}
+      .indicators {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 18px;
+        color: #aaa;
+      }
 
-#fuelLevel{
-  background:red;
-}
+      .side-bar {
+        position: absolute;
+        bottom: 80px;
+        width: 20px;
+        height: 160px;
+        background: #222;
+        border-radius: 10px;
+      }
 
-#tempLevel{
-  background:orange;
-}
-</style>
-</head>
+      .fuel100 {
+        position: absolute;
+        bottom: 214px;
+        left: 10px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
+      .fuel75 {
+        position: absolute;
+        bottom: 178px;
+        left: 16px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-<body>
+      .fuel50 {
+        position: absolute;
+        bottom: 142px;
+        left: 16px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-<div class="cluster">
+      .fuel25 {
+        position: absolute;
+        bottom: 106px;
+        left: 16px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-<div class="logo">HONDA</div>
+      .fuel0 {
+        position: absolute;
+        bottom: 71px;
+        left: 22px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-<canvas id="canvas" width="1200" height="420"></canvas>
-<!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.f6860371-1578-4949-8854-a5a7bcb0e99e.png" alt="Civic G6 Painel Digital" style="width:100%; height:auto;"> -->
-<!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.e65a3adc-3d6b-454e-878a-5440e5aa01a2.png" alt="Civic G6 sem fundo" style="width:66%; height:auto;"> -->
-<img id="car" src="https://copilot.microsoft.com/th/id/BCO.df9e2413-de12-4152-ae65-5b0cdd88de00.png" alt="Civic G6 sem fundo" style="width:66%; height:auto;">
-<!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.00dfbdca-0355-4b23-bafe-412abab45709.png" alt="Civic G6 Painel Digital" width="1200" height="420"> -->
+      .temp100 {
+        position: absolute;
+        bottom: 214px;
+        left: 1109px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
+      .temp75 {
+        position: absolute;
+        bottom: 178px;
+        left: 1116px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-<!-- <div style="position: relative; width: 1200px; height: 420px;"> <img src="https://copilot.microsoft.com/th/id/BCO.e8089c45-063b-4172-b4da-f83c76d2945e.png" alt="Fundo digital" style="width: 100%; height: 100%;"> <img src="https://copilot.microsoft.com/th/id/BCO.4b2aa1b4-86ac-4017-b3e3-c719418fcb44.png" alt="Civic G6" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"> </div> -->
+      .temp50 {
+        position: absolute;
+        bottom: 142px;
+        left: 1116px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-<div class="container">
+      .temp25 {
+        position: absolute;
+        bottom: 106px;
+        left: 1116px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
 
-    <div class="gear" id="gear">D</div>
-    <label id="fuell" for="fuel">FUELL</label>
-    <label id="temperatura" for="temp">TEMP</label>
-    <div class="rpm">
-        <span id="rpmValue">0</span> rpm
+      .temp0 {
+        position: absolute;
+        bottom: 71px;
+        left: 1124px;
+        color: #aaa;
+        font-family: "Roboto", sans-serif;
+        font-weight: bold;
+        font-size: 12px;
+        z-index: 2;
+      }
+
+      #fuelBar {
+        left: 40px;
+      }
+
+      #tempBar {
+        right: 40px;
+      }
+
+      .level {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-radius: 10px;
+      }
+
+      #fuelLevel {
+        background: rgb(13, 0, 255);
+      }
+
+      #tempLevel {
+        background: orange;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="cluster">
+      <img id="logoImg" src="logo honda fundo vermelho.png" alt="" />
+      <div class="logo">HONDA</div>
+
+      <canvas id="canvas" width="1200" height="420"></canvas>
+      <!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.f6860371-1578-4949-8854-a5a7bcb0e99e.png" alt="Civic G6 Painel Digital" style="width:100%; height:auto;"> -->
+      <!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.e65a3adc-3d6b-454e-878a-5440e5aa01a2.png" alt="Civic G6 sem fundo" style="width:66%; height:auto;"> -->
+      <!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.df9e2413-de12-4152-ae65-5b0cdd88de00.png" alt="Civic G6 sem fundo" style="width:66%; height:auto;"> -->
+      <!-- <img id="car" src="https://copilot.microsoft.com/th/id/BCO.00dfbdca-0355-4b23-bafe-412abab45709.png" alt="Civic G6 Painel Digital" width="1200" height="420"> -->
+      <!-- <div style="position: relative; width: 1200px; height: 420px;"> <img src="https://copilot.microsoft.com/th/id/BCO.e8089c45-063b-4172-b4da-f83c76d2945e.png" alt="Fundo digital" style="width: 100%; height: 100%;"> <img src="https://copilot.microsoft.com/th/id/BCO.4b2aa1b4-86ac-4017-b3e3-c719418fcb44.png" alt="Civic G6" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"> </div> -->
+      <img id="fundoazul" src="fundoazul.png" alt="" />
+      <img id="car" src="imagem4 sem fundo.png" alt="" />
+      <div class="container">
+        <div class="gear" id="gear">D</div>
+        <label id="fuell" for="fuel">FUEL</label>
+        <label id="temperatura" for="temp">TEMP</label>
+        <div class="rpm"><span id="rpmValue">0</span> rpm</div>
+
+        <div class="speed">
+          <span id="speedValue">0</span><small> km/h</small>
+        </div>
+        <p class="fuel100">100 -</p>
+        <p class="fuel75">75 -</p>
+        <p class="fuel50">50 -</p>
+        <p class="fuel25">25 -</p>
+        <p class="fuel0">0 -</p>
+        <div class="side-bar" id="fuelBar">
+          <div class="level" id="fuelLevel" style="height: 60%"></div>
+        </div>
+
+        <div class="side-bar" id="tempBar">
+          <div class="level" id="tempLevel" style="height: 40%"></div>
+        </div>
+        <p class="temp100">100 -</p>
+        <p class="temp75">75 -</p>
+        <p class="temp50">50 -</p>
+        <p class="temp25">25 -</p>
+        <p class="temp0">0 -</p>
+        <div class="indicators">
+          🛢 Óleo &nbsp;&nbsp; ⚠ ABS &nbsp;&nbsp; ↔ Seta
+        </div>
+      </div>
     </div>
-    
-    <div class="speed">
-        <span id="speedValue">0</span><small> km/h</small>
-    </div>
-    
-    <div class="side-bar" id="fuelBar">
-        
-        <div class="level" id="fuelLevel" style="height:60%"></div>
-    </div>
-    
-    <div class="side-bar" id="tempBar">
-        <div class="level" id="tempLevel" style="height:40%"></div>
-    </div>
-    <div class="indicators">
-        🛢 Óleo &nbsp;&nbsp; ⚠ ABS &nbsp;&nbsp; ↔ Seta
-    </div>
-</div>
 
-</div>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
 
-<script>
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+      let speed = 0;
+      let rpm = 0;
+      let fuel = 100;
+      let temp = 40;
 
-let speed = 0;
-let rpm = 0;
-let fuel = 60;
-let temp = 40;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+        const maxArc = Math.PI * 0.6; // ~140 graus
 
-  const maxArc = Math.PI * 0.60; // ~140 graus
+        // ===== RPM (lado esquerdo) =====
+        let rpmPercent = rpm / 8000;
+        let rpmAngle = rpmPercent * maxArc;
 
-  // ===== RPM (lado esquerdo) =====
-  let rpmPercent = rpm / 8000;
-  let rpmAngle = rpmPercent * maxArc;
+        let rpmStart = Math.PI * 1.1; // deslocado
+        let rpmEnd = rpmStart + rpmAngle;
 
-  let rpmStart = Math.PI * 1.1;           // deslocado
-  let rpmEnd = rpmStart + rpmAngle;
+        drawArc(350, 350, 250, rpmStart, rpmEnd, "red", 20);
 
-  drawArc(
-    350,
-    350,
-    250,
-    rpmStart,
-    rpmEnd,
-    "red",
-    20
-  );
+        // ===== VELOCIDADE (lado direito) =====
+        let speedPercent = speed / 240;
+        let speedAngle = speedPercent * maxArc;
 
-  // ===== VELOCIDADE (lado direito) =====
-  let speedPercent = speed / 240;
-  let speedAngle = speedPercent * maxArc;
+        let speedStart = Math.PI * 1.1; // fixo
+        let speedEnd = speedStart + rpmAngle;
 
-  let speedStart = Math.PI * 1.1;            // fixo
-  let speedEnd = speedStart + rpmAngle;
+        //   let speedEnd = Math.PI * 1.9;           // fixo
+        //   let speedStart = speedEnd - speedAngle;
 
-//   let speedEnd = Math.PI * 1.9;           // fixo
-//   let speedStart = speedEnd - speedAngle;
+        drawArc(850, 350, 250, speedStart, speedEnd, "red", 20);
+      }
 
-  drawArc(
-    850,
-    350,
-    250,
-    speedStart,
-    speedEnd,
-    "red",
-    20
-  );
-}
+      function drawArc(x, y, radius, start, end, color, width) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, start, end);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = color;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
 
-function drawArc(x,y,radius,start,end,color,width){
-  ctx.beginPath();
-  ctx.arc(x,y,radius,start,end);
-  ctx.strokeStyle=color;
-  ctx.lineWidth=width;
-  ctx.shadowBlur=20;
-  ctx.shadowColor=color;
-  ctx.stroke();
-  ctx.shadowBlur=0;
-}
+      function update() {
+        const fuelElement = document.getElementById("fuelLevel");
+        document.getElementById("tempLevel");
 
-function update(){
+        speed += (Math.random() - 0.4) * 3;
+        rpm += (Math.random() - 0.4) * 250;
 
-  speed += (Math.random()-0.4)*3;
-  rpm += (Math.random()-0.4)*250;
+        if (speed < 0) speed = 0;
+        if (speed > 240) speed = 240;
 
-  if(speed<0) speed=0;
-  if(speed>240) speed=240;
+        if (rpm < 0) rpm = 0;
+        if (rpm > 8000) rpm = 8000;
 
-  if(rpm<0) rpm=0;
-  if(rpm>8000) rpm=8000;
+        fuelElement.style.height = fuel + "%";
+        fuel -= 0.04;
 
-  fuel -= 0.02;
-  if(fuel<0) fuel=100;
+        document.getElementById("fuelLevel").style.height = fuel + "%";
 
-  temp += (Math.random()-0.5)*0.3;
-  if(temp<30) temp=30;
-  if(temp>100) temp=100;
+        if (fuel < 10) {
+          fuelElement.style.background = "red";
+        } else {
+          fuelElement.style.background = "rgb(13, 0, 255)"; // Azul original
+        }
+        if (fuel < 0) fuel = 100;
+        temp += (Math.random() - 0.5) * 0.3;
+        if (temp < 30) temp = 30;
+        if (temp > 100) temp = 100;
 
-  document.getElementById("speedValue").innerText=Math.round(speed);
-  document.getElementById("rpmValue").innerText=Math.round(rpm);
-  document.getElementById("fuelLevel").style.height=fuel+"%";
-  document.getElementById("tempLevel").style.height=temp+"%";
+        document.getElementById("speedValue").innerText = Math.round(speed);
+        document.getElementById("rpmValue").innerText = Math.round(rpm);
 
-  draw();
-  requestAnimationFrame(update);
-}
+        document.getElementById("tempLevel").style.height = temp + "%";
 
-update();
-</script>
+        draw();
+        requestAnimationFrame(update);
+      }
 
-</body>
+      update();
+    </script>
+  </body>
 </html>
