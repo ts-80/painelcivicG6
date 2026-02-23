@@ -1,279 +1,159 @@
-<!doctype html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Digital Cluster PRO</title>
+<style>
+body{
+  margin:0;
+  background:black;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+canvas{
+  background:#050505;
+  border-radius:20px;
+}
+</style>
+</head>
+<body>
 
-    <title>Painel Honda Organizado</title>
+<canvas id="cluster" width="900" height="400"></canvas>
 
-    <style>
-      body {
-        margin: 0;
-        background: #000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: "Cinzel", "Roboto", serif;
-      }
+<script>
+const canvas = document.getElementById("cluster");
+const ctx = canvas.getContext("2d");
 
-      .cluster {
-        width: 1200px;
-        height: 420px;
-        border-radius: 40px;
-        position: relative;
-        box-shadow: 0 0 80px rgba(255, 0, 0, 0.336);
-        overflow: hidden;
-      }
+let rpm = 0;
+let speed = 0;
+let targetRPM = 2500;
+let targetSpeed = 105;
 
-      canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-      }
+let startupPhase = true;
+let startupProgress = 0;
 
-      #fundoazul {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-      }
+function easeOut(t){
+  return 1 - Math.pow(1 - t, 3);
+}
 
-      #car {
-        position: relative;
-        width: 635px;
-        left: 289px;
-        top: 41px;
-        z-index: 0;
-      }
+function drawRainbowArc(x,y,radius,start,end){
 
-      .logo {
-        position: absolute;
-        top: 85px;
-        width: 100%;
-        text-align: center;
-        color: white;
-        font-size: 34px;
-        letter-spacing: 3px;
-        text-shadow: 0 0 15px red;
-      }
+  const grad = ctx.createConicGradient(start,x,y);
+  grad.addColorStop(0.0,"#00ff00");
+  grad.addColorStop(0.25,"#ffff00");
+  grad.addColorStop(0.45,"#ff0000");
+  grad.addColorStop(0.65,"#00ffff");
+  grad.addColorStop(1.0,"#0000ff");
 
-      .speed {
-        position: absolute;
-        right: 270px;
-        top: 160px;
-        color: white;
-        font-family: "Roboto", sans-serif;
-        font-weight: bold;
-        font-size: 80px;
-        text-shadow: 0 0 20px red;
-      }
+  ctx.lineWidth = 28;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = grad;
 
-      .speed small {
-        font-size: 28px;
-      }
+  ctx.beginPath();
+  ctx.arc(x,y,radius,start,end);
+  ctx.stroke();
 
-      .rpm {
-        position: absolute;
-        left: 270px;
-        top: 170px;
-        color: white;
-        font-family: "Roboto", sans-serif;
-        font-weight: bold;
-        font-size: 45px;
-        text-shadow: 0 0 15px red;
-      }
+  ctx.shadowBlur = 30;
+  ctx.shadowColor = "white";
+  ctx.stroke();
 
-      .gear {
-        position: absolute;
-        top: 150px;
-        width: 100%;
-        text-align: center;
-        font-family: "Roboto", sans-serif;
-        font-weight: bold;
-        font-size: 70px;
-        color: white;
-        text-shadow: 0 0 20px red;
-      }
+  ctx.shadowBlur = 0;
+}
 
-      .side-bar {
-        position: absolute;
-        bottom: 80px;
-        width: 20px;
-        height: 160px;
-        background: #222;
-        border-radius: 10px;
-      }
+function drawNeedle(x,y,radius,min,max,value){
 
-      #fuelBar {
-        left: 40px;
-      }
-      #tempBar {
-        right: 40px;
-      }
+  let percent = (value-min)/(max-min);
+  let angle = Math.PI*0.75 + percent*(Math.PI*1.5);
 
-      .level {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        border-radius: 10px;
-      }
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(angle);
 
-      #fuelLevel {
-        background: rgb(13, 0, 255);
-      }
-      #tempLevel {
-        background: orange;
-      }
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.moveTo(radius-40,0);
+  ctx.lineTo(radius-70,-6);
+  ctx.lineTo(radius-70,6);
+  ctx.closePath();
+  ctx.fill();
 
-      .indicators {
-        position: absolute;
-        bottom: 20px;
-        width: 100%;
-        text-align: center;
-        font-size: 18px;
-        color: #aaa;
-      }
-    </style>
-  </head>
+  ctx.restore();
+}
 
-  <body>
-    <div class="cluster">
-      <img id="fundoazul" src="fundoazul.png" alt="" />
-      <img id="car" src="imagem4 sem fundo.png" alt="" />
+function drawCenterText(x,y,value,label){
 
-      <div class="logo">HONDA</div>
+  ctx.fillStyle="white";
+  ctx.font="bold 50px Arial";
+  ctx.textAlign="center";
+  ctx.fillText(Math.round(value),x,y);
 
-      <canvas id="canvas" width="1200" height="420"></canvas>
+  ctx.font="16px Arial";
+  ctx.fillText(label,x,y+25);
+}
 
-      <div class="gear">D</div>
-      <div class="rpm"><span id="rpmValue">0</span> rpm</div>
-      <div class="speed">
-        <span id="speedValue">0</span><small> km/h</small>
-      </div>
+function drawBottomBar(){
 
-      <div class="side-bar" id="fuelBar">
-        <div class="level" id="fuelLevel" style="height: 60%"></div>
-      </div>
+  ctx.fillStyle="#111";
+  ctx.fillRect(0,350,900,50);
 
-      <div class="side-bar" id="tempBar">
-        <div class="level" id="tempLevel" style="height: 40%"></div>
-      </div>
+  ctx.fillStyle="white";
+  ctx.font="16px Arial";
+  ctx.fillText("0:52",50,380);
+  ctx.fillText("95 °C",450,380);
+  ctx.fillText("32.5",820,380);
+}
 
-      <div class="indicators">
-        🛢 Óleo &nbsp;&nbsp; ⚠ ABS &nbsp;&nbsp; ↔ Seta
-      </div>
-    </div>
+function render(){
 
-    <script>
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      let speed = 0;
-      let rpm = 0;
-      let fuel = 60;
-      let temp = 40;
+  let startAngle = Math.PI*0.75;
+  let endAngle = Math.PI*2.25;
 
-      function drawSegmentedArc(x, y, radius, value, maxValue, totalSegments) {
-        const startAngle = Math.PI * 1.15;
-        const endAngle = Math.PI * 1.85;
-        const arcRange = endAngle - startAngle;
+  drawRainbowArc(250,200,140,startAngle,endAngle);
+  drawRainbowArc(650,200,140,startAngle,endAngle);
 
-        const activeSegments = Math.floor((value / maxValue) * totalSegments);
+  drawNeedle(250,200,140,0,8000,rpm);
+  drawNeedle(650,200,140,0,180,speed);
 
-        for (let i = 0; i < totalSegments; i++) {
-          const segStart = startAngle + (i / totalSegments) * arcRange;
-          const segEnd = startAngle + ((i + 0.8) / totalSegments) * arcRange;
+  drawCenterText(250,210,rpm,"RPM");
+  drawCenterText(650,210,speed,"KM/H");
 
-          ctx.beginPath();
-          ctx.arc(x, y, radius, segStart, segEnd);
+  drawBottomBar();
 
-          // 🔵 Azul normal
-          let color = "#00aaff";
+  requestAnimationFrame(render);
+}
 
-          // 🔴 Últimos 15% viram vermelho (zona de corte)
-          if (i > totalSegments * 0.85) {
-            color = "#ff0000";
-          }
+function update(){
 
-          // Só ilumina até o valor atual
-          if (i <= activeSegments) {
-            ctx.strokeStyle = color;
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = color;
-          } else {
-            ctx.strokeStyle = "#0a1a22";
-            ctx.shadowBlur = 0;
-          }
+  if(startupPhase){
+    startupProgress += 0.02;
 
-          ctx.lineWidth = 12;
-          ctx.stroke();
-        }
+    if(startupProgress <= 1){
+      let eased = easeOut(startupProgress);
+      rpm = 8000 * eased;
+      speed = 180 * eased;
+    }else if(startupProgress <= 2){
+      let eased = easeOut(startupProgress-1);
+      rpm = 8000 * (1-eased);
+      speed = 180 * (1-eased);
+    }else{
+      startupPhase = false;
+    }
 
-        ctx.shadowBlur = 0;
-      }
+  }else{
+    rpm += (targetRPM - rpm) * 0.05;
+    speed += (targetSpeed - speed) * 0.05;
+  }
 
-      function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+  requestAnimationFrame(update);
+}
 
-        // RPM (lado esquerdo)
-        drawSegmentedArc(
-          350,
-          350,
-          250,
-          rpm,
-          8000,
-          40, // quantidade de blocos
-        );
+render();
+update();
+</script>
 
-        // Velocidade (lado direito)
-        drawSegmentedArc(850, 350, 250, speed, 240, 40);
-      }
-
-      function update() {
-        speed += (Math.random() - 0.4) * 3;
-        rpm += (Math.random() - 0.4) * 250;
-
-        if (speed < 0) speed = 0;
-        if (speed > 240) speed = 240;
-
-        if (rpm < 0) rpm = 0;
-        if (rpm > 8000) rpm = 8000;
-
-        fuel -= 0.03;
-        if (fuel < 0) fuel = 100;
-
-        temp += (Math.random() - 0.5) * 0.3;
-        if (temp < 30) temp = 30;
-        if (temp > 100) temp = 100;
-
-        document.getElementById("speedValue").innerText = Math.round(speed);
-        document.getElementById("rpmValue").innerText = Math.round(rpm);
-        document.getElementById("fuelLevel").style.height = fuel + "%";
-        document.getElementById("tempLevel").style.height = temp + "%";
-
-        if (fuel < 10) {
-          document.getElementById("fuelLevel").style.background = "red";
-        } else {
-          document.getElementById("fuelLevel").style.background =
-            "rgb(13, 0, 255)";
-        }
-
-        draw();
-        requestAnimationFrame(update);
-      }
-
-      update();
-    </script>
-  </body>
+</body>
 </html>
