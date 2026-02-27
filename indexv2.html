@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+<title>Painel Honda OEM</title>
+
+<style>
+
+body{
+margin:0;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Roboto;
+}
+
+.cluster{
+width:1200px;
+height:420px;
+position:relative;
+border-radius:40px;
+overflow:hidden;
+box-shadow:0 0 40px rgba(0,0,0,0.8);
+}
+
+.containerCanvas{
+/* position:absolute; */
+
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 5px;
+
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+z-index:2;
+}
+
+#fundoazul{
+position:absolute;
+width:100%;
+height:100%;
+z-index:0;
+}
+
+#car{
+position:absolute;
+width:600px;
+left:300px;
+top:60px;
+z-index:1;
+opacity:0.95;
+}
+
+.logo{
+position:absolute;
+top:30px;
+width:100%;
+text-align:center;
+color:white;
+font-size:28px;
+letter-spacing:4px;
+z-index:3;
+}
+
+.speed{
+position:absolute;
+left:210px;
+top:180px;
+color:white;
+font-size:48px;
+font-weight:300;
+z-index:3;
+}
+
+.rpm{
+position:absolute;
+right:220px;
+top:180px;
+color:white;
+font-size:45px;
+font-weight:300;
+z-index:3;
+}
+
+.gear{
+position:absolute;
+top:150px;
+width:100%;
+text-align:center;
+color:white;
+font-size:60px;
+z-index:3;
+}
+
+.side-bar{
+position:absolute;
+bottom:80px;
+width:20px;
+height:160px;
+background:#222;
+border-radius:10px;
+z-index:3;
+}
+
+#fuelBar{left:40px;}
+#tempBar{right:40px;}
+
+.level{
+position:absolute;
+bottom:0;
+width:100%;
+border-radius:10px;
+}
+
+#fuelLevel{background:#0080ff;}
+#tempLevel{background:orange;}
+
+</style>
+</head>
+
+<body>
+
+<div class="cluster">
+
+<img id="fundoazul" src="fundoazul.png">
+<img id="car" src="imagem4 sem fundo.png">
+
+<div class="logo">HONDA</div>
+
+<div class="containerCanvas">
+
+    <canvas id="canvas" width="1200" height="420"></canvas>
+</div>
+<div class="containerInfo">
+    <div class="gear" id="gear">D</div>
+</div>
+
+<div class="speed">
+<span id="speedValue">0</span> km/h
+</div>
+
+<div class="rpm">
+<span id="rpmValue">0</span> rpm
+</div>
+
+<div class="side-bar" id="fuelBar">
+<div class="level" id="fuelLevel" style="height:70%"></div>
+</div>
+
+<div class="side-bar" id="tempBar">
+<div class="level" id="tempLevel" style="height:40%"></div>
+</div>
+
+</div>
+
+<script>
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+let speed=0;
+let rpm=0;
+let fuel=70;
+let temp=40;
+
+////////////////////////////
+// DESENHAR DIAL SEGMENTADO
+////////////////////////////
+
+function drawDial(cx,cy,radius,max,value,color,warning=0.85){
+
+const segments=120;
+
+const start=Math.PI*0.75;
+const end=Math.PI*2.25;
+
+const step=(end-start)/segments;
+
+const active=(value/max)*segments;
+
+for(let i=0;i<segments;i++){
+
+const angle=start+i*step;
+
+const inner=radius-12;
+const outer=radius;
+
+let c="#333";
+
+if(i<active){
+
+if(i>segments*warning)
+c="#ff3030";
+else
+c=color;
+}
+
+ctx.strokeStyle=c;
+ctx.lineWidth=3;
+
+ctx.beginPath();
+
+ctx.moveTo(
+cx+Math.cos(angle)*inner,
+cy+Math.sin(angle)*inner
+);
+
+ctx.lineTo(
+cx+Math.cos(angle)*outer,
+cy+Math.sin(angle)*outer
+);
+
+ctx.stroke();
+
+}
+
+//////////////// ponteiro
+
+const percent=value/max;
+
+const angle=start+(end-start)*percent;
+
+ctx.strokeStyle=color;
+ctx.lineWidth=2;
+
+ctx.beginPath();
+
+ctx.moveTo(cx,cy);
+
+ctx.lineTo(
+cx+Math.cos(angle)*(radius-20),
+cy+Math.sin(angle)*(radius-20)
+);
+
+ctx.stroke();
+
+}
+
+////////////////////////////
+// DRAW
+////////////////////////////
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+drawDial(300,240,140,240,speed,"#00aaff");
+
+drawDial(900,240,140,8000,rpm,"white",0.80);
+
+}
+
+////////////////////////////
+// UPDATE
+////////////////////////////
+
+function update(){
+
+speed+= (Math.random()-0.45)*2;
+rpm+= (Math.random()-0.45)*150;
+
+speed=Math.max(0,Math.min(240,speed));
+rpm=Math.max(0,Math.min(8000,rpm));
+
+document.getElementById("speedValue").innerText=Math.round(speed);
+document.getElementById("rpmValue").innerText=Math.round(rpm);
+
+fuel-=0.02;
+if(fuel<0) fuel=100;
+
+temp+= (Math.random()-0.5)*0.3;
+temp=Math.max(30,Math.min(100,temp));
+
+document.getElementById("fuelLevel").style.height=fuel+"%";
+document.getElementById("tempLevel").style.height=temp+"%";
+
+draw();
+
+requestAnimationFrame(update);
+
+}
+
+update();
+
+</script>
+
+</body>
+</html>
